@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Modern Investor's Infographic: A Guide to Portfolios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Brilliant Blues & Oranges -->
+    <!-- Application Structure Plan: A top-down narrative scrollable page. It begins with a simple definition (What is a Portfolio?), moves to the components (Building Blocks), explains the core principles of construction (Designing Your Portfolio), visualizes the common outcomes (Portfolio Types), and concludes with the management process (The Management Flowchart). This structure was chosen to guide a novice user logically from the basic "what" to the more complex "how," making the information digestible in a single, continuous flow. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: Definition of a portfolio -> Goal: Inform -> Viz/Method: Large, bold text with Unicode icons (💰, 📈, 🏠) -> Justification: Grabs attention and simplifies the core concept immediately. Method: HTML/CSS.
+        - Report Info: Asset classes & their risk/return -> Goal: Compare -> Viz/Method: Radar Chart -> Justification: A radar chart is excellent for comparing multiple quantitative variables (Risk, Return, Liquidity) across different categories (asset classes) in a single, compact visualization. Library: Chart.js.
+        - Report Info: Asset Allocation -> Goal: Inform -> Viz/Method: Donut Chart -> Justification: Best choice for showing a simple composition or parts-of-a-whole relationship, like the classic 60/40 split. Library: Chart.js.
+        - Report Info: Risk-based portfolio types (Conservative, Moderate, Aggressive) -> Goal: Compare -> Viz/Method: Stacked Bar Chart -> Justification: Perfectly illustrates how the composition (asset mix) changes across different categories, making the shift in strategy visually obvious. Library: Chart.js.
+        - Report Info: Portfolio Construction Process -> Goal: Organize -> Viz/Method: HTML/CSS Flowchart -> Justification: A simple, clean visual flow is better than text for explaining a step-by-step process. Adheres to NO SVG/Mermaid rule. Method: HTML/CSS with Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            max-height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flowchart-step {
+            border: 2px solid #94d2bd;
+            background-color: #f0fdfa;
+            color: #005f73;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+        }
+        .flowchart-arrow {
+            font-size: 2rem;
+            color: #94d2bd;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto px-4 py-12">
+
+        <section id="header" class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#005f73] mb-2">The Modern Investor's Infographic</h1>
+            <p class="text-lg md:text-xl text-gray-600">A Visual Guide to Building Your Financial Portfolio in the USA</p>
+        </section>
+
+        <section id="what-is-it" class="mb-16">
+            <div class="card text-center">
+                <h2 class="text-3xl font-bold text-[#005f73] mb-4">First, What is a Portfolio?</h2>
+                <p class="text-lg max-w-3xl mx-auto text-gray-700 mb-6">Think of it as a single basket holding all your financial assets. It's not just a list; it’s a strategic collection designed to help you reach your goals, whether that's buying a house, retiring comfortably, or building long-term wealth.</p>
+                <div class="flex justify-center items-center space-x-4 md:space-x-8 text-xl">
+                    <div class="text-center">
+                        <span class="text-5xl">💰</span>
+                        <p class="font-semibold mt-2">Stocks & Cash</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-5xl">📈</span>
+                        <p class="font-semibold mt-2">Bonds & Funds</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-5xl">🏠</span>
+                        <p class="font-semibold mt-2">Real Estate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="building-blocks" class="mb-16">
+             <h2 class="text-3xl font-bold text-center text-[#005f73] mb-8">The Building Blocks: Asset Classes Compared</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="card">
+                    <div class="chart-container">
+                        <canvas id="assetClassChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Finding the Right Mix</h3>
+                    <p class="text-gray-700">Each asset class has a unique profile of potential return, risk, and liquidity (how easily it can be turned into cash). A well-built portfolio combines these assets to balance their characteristics. For example, the high growth potential of stocks is often balanced by the stability of bonds.</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><b class="text-[#0a9396]">Stocks (Equities):</b> High growth potential, but higher risk.</li>
+                        <li><b class="text-[#94d2bd]">Bonds (Fixed Income):</b> Lower risk and stable income, but lower growth.</li>
+                        <li><b class="text-[#ee9b00]">Real Estate:</b> Can provide income and growth, but is not easily sold (illiquid).</li>
+                        <li><b class="text-[#ca6702]">Cash:</b> Very safe and liquid, but offers minimal to no growth.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="design-principles" class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-[#005f73] mb-8">Designing Your Portfolio: 3 Key Principles</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold mb-4 text-[#0a9396]">1. Asset Allocation</h3>
+                    <p class="text-gray-600 mb-4 h-24">This is the most critical decision: how you split your money between asset classes. The "60/40" portfolio is a classic example.</p>
+                    <div class="chart-container h-64">
+                         <canvas id="allocationChart"></canvas>
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold mb-4 text-[#ee9b00]">2. Diversification</h3>
+                    <p class="text-gray-600 mb-4 h-24">The golden rule: "Don't put all your eggs in one basket." Spreading investments reduces the risk of one poor performer sinking your portfolio.</p>
+                     <div class="flex items-center justify-center space-x-4 h-64">
+                        <div class="text-center">
+                            <div class="w-24 h-24 bg-[#ae2012] rounded-lg mx-auto flex items-center justify-center text-white font-bold">100%</div>
+                            <p class="mt-2 font-semibold">Undiversified</p>
+                        </div>
+                        <div class="text-center">
+                             <div class="w-24 h-24 grid grid-cols-2 gap-1 mx-auto">
+                                <div class="bg-[#0a9396] rounded-sm"></div>
+                                <div class="bg-[#94d2bd] rounded-sm"></div>
+                                <div class="bg-[#ee9b00] rounded-sm"></div>
+                                <div class="bg-[#ca6702] rounded-sm"></div>
+                             </div>
+                             <p class="mt-2 font-semibold">Diversified</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold mb-4 text-[#ca6702]">3. Rebalancing</h3>
+                    <p class="text-gray-600 mb-4 h-24">Over time, your mix will drift. Rebalancing is trimming winners and buying laggards to return to your target allocation, keeping risk in check.</p>
+                    <div class="flex items-center justify-center h-64">
+                        <div class="text-center">
+                             <span class="text-6xl">⚖️</span>
+                             <p class="mt-2 font-semibold">Stay on Target</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="portfolio-types" class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-[#005f73] mb-8">Common Portfolio Types by Risk</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                     <p class="text-gray-700 text-lg mb-4">Your risk tolerance and time horizon determine your portfolio type. An investor with a long time until retirement can afford to be more aggressive, while someone nearing retirement will likely be more conservative to protect their capital.</p>
+                     <p class="text-gray-700 text-lg">This chart shows how the mix of assets changes. Notice how the allocation to riskier assets (Stocks) increases from conservative to aggressive.</p>
+                </div>
+                <div class="card">
+                    <div class="chart-container h-96">
+                        <canvas id="portfolioTypesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="management-flow" class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-[#005f73] mb-8">The Portfolio Management Flowchart</h2>
+            <div class="card max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="flowchart-step w-full md:w-auto">Define Goals & Risk Tolerance</div>
+                    <div class="flowchart-arrow transform md:-rotate-90">↓</div>
+                    <div class="flowchart-step w-full md:w-auto">Set Asset Allocation</div>
+                    <div class="flowchart-arrow transform md:-rotate-90">↓</div>
+                    <div class="flowchart-step w-full md:w-auto">Select Investments & Diversify</div>
+                    <div class="flowchart-arrow transform md:-rotate-90">↓</div>
+                    <div class="flowchart-step w-full md:w-auto">Monitor & Rebalance Periodically</div>
+                </div>
+                 <p class="text-center mt-6 text-gray-600">This is a continuous cycle. As your life changes, your goals and risk tolerance may change, requiring adjustments to the entire process. This can be self-managed or done with a professional financial advisor.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="bg-[#005f73] text-white/80 text-center p-4">
+        <p>This infographic is for informational purposes only and does not constitute financial advice.</p>
+    </footer>
+
+<script>
+    function wrapLabels(label) {
+        const maxLen = 16;
+        if (label.length <= maxLen) {
+            return label;
+        }
+        const words = label.split(' ');
+        let currentLine = '';
+        const lines = [];
+        for (const word of words) {
+            if ((currentLine + ' ' + word).trim().length > maxLen) {
+                lines.push(currentLine.trim());
+                currentLine = word;
+            } else {
+                currentLine = (currentLine + ' ' + word).trim();
+            }
+        }
+        if (currentLine) {
+            lines.push(currentLine.trim());
+        }
+        return lines;
+    }
+
+    const defaultTooltipCallback = {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    const colors = {
+        blue1: '#005f73',
+        blue2: '#0a9396',
+        blue3: '#94d2bd',
+        sand1: '#e9d8a6',
+        orange1: '#ee9b00',
+        orange2: '#ca6702',
+        red1: '#bb3e03',
+        red2: '#ae2012',
+    };
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        new Chart(document.getElementById('assetClassChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Stocks', 'Bonds', 'Real Estate', 'Cash'],
+                datasets: [{
+                    label: 'Asset Characteristics',
+                    data: [8, 4, 6, 1], 
+                    backgroundColor: 'rgba(10, 147, 150, 0.2)',
+                    borderColor: colors.blue2,
+                    pointBackgroundColor: colors.blue2,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: colors.blue2
+                }]
+            },
+            options: {
+                ...defaultTooltipCallback,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        pointLabels: { font: { size: 14, weight: '600' }, color: colors.blue1 },
+                        ticks: {
+                            backdropColor: 'transparent',
+                            stepSize: 2,
+                            font: { size: 10 }
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    ...defaultTooltipCallback.plugins,
+                    legend: { display: false }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('allocationChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Stocks (for Growth)', 'Bonds (for Stability)'],
+                datasets: [{
+                    data: [60, 40],
+                    backgroundColor: [colors.blue2, colors.orange1],
+                    borderColor: '#ffffff',
+                    borderWidth: 4,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                ...defaultTooltipCallback,
+                maintainAspectRatio: false,
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    ...defaultTooltipCallback.plugins,
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 20 }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('portfolioTypesChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Conservative', 'Moderate', 'Aggressive'],
+                datasets: [
+                    {
+                        label: 'Stocks',
+                        data: [20, 60, 85],
+                        backgroundColor: colors.blue2,
+                    },
+                    {
+                        label: 'Bonds',
+                        data: [70, 35, 15],
+                        backgroundColor: colors.orange1,
+                    },
+                    {
+                        label: 'Cash',
+                        data: [10, 5, 0],
+                        backgroundColor: colors.blue3,
+                    }
+                ]
+            },
+            options: {
+                ...defaultTooltipCallback,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { callback: value => value + '%' }
+                    },
+                    y: {
+                        stacked: true
+                    }
+                },
+                plugins: {
+                    ...defaultTooltipCallback.plugins,
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        ...defaultTooltipCallback.plugins.tooltip,
+                        callbacks: {
+                             ...defaultTooltipCallback.plugins.tooltip.callbacks,
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.raw + '%';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
